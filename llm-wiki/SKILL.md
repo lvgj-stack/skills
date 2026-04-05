@@ -14,6 +14,44 @@ description: >
   knowledge base, use it automatically.
 ---
 
+## Arguments
+
+This skill accepts an optional subcommand and target:
+
+```
+/llm-wiki [subcommand] [target]
+```
+
+### Subcommand dispatch
+
+When the skill is invoked, check `ARGUMENTS` for a subcommand and handle as follows:
+
+**`ingest [path]`**
+- If `path` is given: ingest that specific file → go to Operation 1
+- If no path: ask the user — *"Which file would you like to ingest? (provide a path, or say 'all' to process everything new in raw/)"* — then proceed once answered
+
+**`query [question]`**
+- If `question` is given: answer it from the wiki → go to Operation 2
+- If no question: ask the user — *"What would you like to know from the wiki?"* — then proceed
+
+**`lint`**
+- Run structural lint + LLM health checks → go to Operation 3
+
+**No subcommand / `help`**
+- Ask: *"What would you like to do with the wiki?"* and present the options:
+  ```
+  1. ingest  — add a new source document to the wiki
+  2. query   — ask a question answered from the wiki
+  3. lint    — run a health check on the wiki
+  ```
+  Wait for the user to choose, then proceed to the right operation.
+
+**Natural conversation (triggered without `/llm-wiki`):**
+Use the context of the user's message to determine which operation applies
+and proceed directly — no need to ask.
+
+---
+
 ## Overview
 
 This knowledge base follows the LLM Wiki pattern: you (the LLM) own the wiki
